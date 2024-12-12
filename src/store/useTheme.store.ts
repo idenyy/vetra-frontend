@@ -1,9 +1,5 @@
 import { create } from 'zustand';
-
-interface ThemeState {
-  theme: string;
-  setTheme: (theme: string) => void;
-}
+import { ThemeState } from '../types/store.type.ts';
 
 export const useTheme = create<ThemeState>((set) => ({
   theme: localStorage.getItem('chat-theme') || 'black',

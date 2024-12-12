@@ -1,21 +1,8 @@
 import { create } from 'zustand';
 import { instance } from '../config/axios.ts';
-import { User } from '../types/user.type.ts';
 import toast from 'react-hot-toast';
 import axios from 'axios';
-
-interface AuthState {
-  authUser: User | null;
-  isSigningUp: boolean;
-  isVerifyingSignup: boolean;
-  isLoggingIn: boolean;
-  isCheckingAuth: boolean;
-  checkAuth: () => Promise<User | null>;
-  signup: (data: { name: string; email: string; password: string }) => Promise<User | void>;
-  verifySignup: (verificationCode: string) => Promise<void>;
-  login: (data: { email: string; password: string }) => Promise<User | void>;
-  logout: () => Promise<void>;
-}
+import { AuthState } from '../types/store.type.ts';
 
 export const useAuthStore = create<AuthState>((set) => ({
   authUser: null,
@@ -56,12 +43,16 @@ export const useAuthStore = create<AuthState>((set) => ({
     set({ isVerifyingSignup: true });
 
     try {
-      const response = await instance.post('/auth/signup/verify', { verification_code: verificationCode });
+      const response = await instance.post('/auth/signup/verify', {
+        verification_code: verificationCode
+      });
       toast.success(response.data.message || 'Signup verified successfully');
       set({ authUser: response.data.user });
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.error || 'Verification failed. Please try again.');
+        toast.error(
+          error.response.data.error || 'Verification failed. Please try again.'
+        );
       }
       throw error;
     } finally {
@@ -77,7 +68,10 @@ export const useAuthStore = create<AuthState>((set) => ({
       set({ authUser: response.data });
       toast.success(response.data.message || 'Logged in successfully');
     } catch (error: unknown) {
-      if (axios.isAxiosError(error) && error.response) toast.error(error.response.data.error || 'Invalid credentials. Please try again.');
+      if (axios.isAxiosError(error) && error.response)
+        toast.error(
+          error.response.data.error || 'Invalid credentials. Please try again.'
+        );
       throw error;
     } finally {
       set({ isLoggingIn: false });
@@ -91,7 +85,9 @@ export const useAuthStore = create<AuthState>((set) => ({
       toast.success('Logged out successfully');
     } catch (error: unknown) {
       if (axios.isAxiosError(error) && error.response) {
-        toast.error(error.response.data.error || 'Logout failed. Please try again.');
+        toast.error(
+          error.response.data.error || 'Logout failed. Please try again.'
+        );
       }
     }
   }
