@@ -3,12 +3,14 @@ import { useChat } from '../store/useChat.store.ts';
 
 import SidebarSkeleton from './skeletons/SidebarSkeleton.tsx';
 import { Users } from 'lucide-react';
+import { useAuthStore } from '../store/useAuth.store.ts';
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChat();
 
-  const onlineUsers: string[] = [];
+  const { onlineUsers } = useAuthStore();
+  const onlineUserIds = onlineUsers.map((user) => user.id).filter((id) => id);
 
   useEffect(() => {
     getUsers();
@@ -40,7 +42,7 @@ const Sidebar = () => {
                 alt={user.name}
                 className="size-12 object-cover rounded-full"
               />
-              {user.id && onlineUsers.includes(user.id) && (
+              {user.id && onlineUserIds.includes(user.id) && (
                 <span className="absolute bottom-0 right-0 bg-success/50 ring-2 ring-zinc-900 rounded-full size-3" />
               )}
             </div>
@@ -48,7 +50,7 @@ const Sidebar = () => {
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-medium truncate">{user.name}</div>
               <div className="text-sm text-zinc-400">
-                {user.id && onlineUsers.includes(user.id)
+                {user.id && onlineUserIds.includes(user.id)
                   ? 'Online'
                   : 'Offline'}
               </div>
