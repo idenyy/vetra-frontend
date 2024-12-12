@@ -1,11 +1,18 @@
 import React, { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, MessageSquare } from 'lucide-react';
-import { useAuthStore } from '../store/useAuth.store.ts';
+import { useAuth } from '../store/useAuth.store.ts';
 import toast from 'react-hot-toast';
 
 const ConfirmationPage: React.FC = () => {
-  const [verificationCode, setVerificationCode] = useState<string[]>(['', '', '', '', '', '']);
+  const [verificationCode, setVerificationCode] = useState<string[]>([
+    '',
+    '',
+    '',
+    '',
+    '',
+    ''
+  ]);
 
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -20,13 +27,16 @@ const ConfirmationPage: React.FC = () => {
     }
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDown = (
+    e: React.KeyboardEvent<HTMLInputElement>,
+    index: number
+  ) => {
     if (e.key === 'Backspace' && !verificationCode[index] && index > 0) {
       inputRefs.current[index - 1]?.focus();
     }
   };
 
-  const { verifySignup, isVerifyingSignup } = useAuthStore();
+  const { verifySignup, isVerifyingSignup } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -58,7 +68,9 @@ const ConfirmationPage: React.FC = () => {
                 </Link>
               </div>
               <h1 className="text-2xl font-bold mt-2">Confirm Your Account</h1>
-              <p className="text-base-content/60">Enter the 6-digit verification code sent to your email</p>
+              <p className="text-base-content/60">
+                Enter the 6-digit verification code sent to your email
+              </p>
             </div>
           </div>
 
@@ -82,7 +94,11 @@ const ConfirmationPage: React.FC = () => {
             </div>
 
             {/* Кнопка підтвердження */}
-            <button type="submit" className="btn btn-primary w-full" disabled={isVerifyingSignup}>
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isVerifyingSignup}
+            >
               {isVerifyingSignup ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
@@ -107,10 +123,18 @@ const ConfirmationPage: React.FC = () => {
       </div>
 
       {/* Стилізована секція */}
-      <div className="hidden lg:block bg-cover bg-center" style={{ backgroundImage: "url('https://source.unsplash.com/random/800x600')" }}>
+      <div
+        className="hidden lg:block bg-cover bg-center"
+        style={{
+          backgroundImage: "url('https://source.unsplash.com/random/800x600')"
+        }}
+      >
         <div className="h-full bg-black bg-opacity-50 flex flex-col justify-center items-center text-white">
           <h1 className="text-2xl font-bold">Join our community</h1>
-          <p className="text-base mt-2">Connect with friends, share moments, and stay in touch with your loved ones.</p>
+          <p className="text-base mt-2">
+            Connect with friends, share moments, and stay in touch with your
+            loved ones.
+          </p>
         </div>
       </div>
     </div>

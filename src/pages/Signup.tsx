@@ -1,5 +1,13 @@
-import { useAuthStore } from '../store/useAuth.store.ts';
-import { MessageSquare, User, Mail, Lock, EyeOff, Eye, Loader2 } from 'lucide-react';
+import { useAuth } from '../store/useAuth.store.ts';
+import {
+  MessageSquare,
+  User,
+  Mail,
+  Lock,
+  EyeOff,
+  Eye,
+  Loader2
+} from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthImagePattern from '../components/AuthImagePattern.tsx';
 import { useState } from 'react';
@@ -12,15 +20,19 @@ const Signup = () => {
     password: ''
   });
 
-  const { signup, isSigningUp } = useAuthStore();
+  const { signup, isSigningUp } = useAuth();
   const navigate = useNavigate();
 
   const validate = () => {
     if (!formData.name.trim()) return toast.error('Name is required');
     if (!formData.email.trim()) return toast.error('Email is required');
-    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(formData.email)) return toast.error('Invalid email address');
+    if (
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(formData.email)
+    )
+      return toast.error('Invalid email address');
     if (!formData.password) return toast.error('Password is required');
-    if (formData.password.length < 6) return toast.error('Password must be at least 6 characters');
+    if (formData.password.length < 6)
+      return toast.error('Password must be at least 6 characters');
     return true;
   };
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -47,7 +59,9 @@ const Signup = () => {
                 <MessageSquare className="size-6 text-primary" />
               </div>
               <h1 className="text-2xl font-bold mt-2">Create Account</h1>
-              <p className="text-base-content/60">Get started with your free account</p>
+              <p className="text-base-content/60">
+                Get started with your free account
+              </p>
             </div>
           </div>
 
@@ -65,7 +79,9 @@ const Signup = () => {
                   className="input input-bordered w-full pl-10"
                   placeholder="Your Name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -83,7 +99,9 @@ const Signup = () => {
                   className="input input-bordered w-full pl-10"
                   placeholder="Email"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
                 />
               </div>
             </div>
@@ -101,15 +119,29 @@ const Signup = () => {
                   className="input input-bordered w-full pl-10"
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                  onChange={(e) =>
+                    setFormData({ ...formData, password: e.target.value })
+                  }
                 />
-                <button type="button" className="absolute inset-y-0 right-0 pr-3 flex items-center" onClick={() => setShowPassword(!showPassword)}>
-                  {showPassword ? <EyeOff className="size-5 text-base-content/40" /> : <Eye className="size-5 text-base-content/40" />}
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="size-5 text-base-content/40" />
+                  ) : (
+                    <Eye className="size-5 text-base-content/40" />
+                  )}
                 </button>
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isSigningUp}>
+            <button
+              type="submit"
+              className="btn btn-primary w-full"
+              disabled={isSigningUp}
+            >
               {isSigningUp ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />
@@ -131,7 +163,10 @@ const Signup = () => {
         </div>
       </div>
 
-      <AuthImagePattern title="Join out community" description="Connect with friends, share moments, and stay in touch with your loved ones." />
+      <AuthImagePattern
+        title="Join out community"
+        description="Connect with friends, share moments, and stay in touch with your loved ones."
+      />
     </div>
   );
 };

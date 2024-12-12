@@ -3,7 +3,7 @@ import { axios } from '../config/axios.ts';
 import toast from 'react-hot-toast';
 import { AuthState } from '../types/store.type.ts';
 
-export const useAuthStore = create<AuthState>((set) => ({
+export const useAuth = create<AuthState>((set) => ({
   authUser: null,
   isSigningUp: false,
   isVerifyingSignup: false,

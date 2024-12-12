@@ -1,11 +1,11 @@
-import { useAuthStore } from '../store/useAuth.store.ts';
-import { useUserStore } from '../store/useUser.store.ts';
+import { useAuth } from '../store/useAuth.store.ts';
+import { useUser } from '../store/useUser.store.ts';
 import { Camera, Loader2, Mail, User } from 'lucide-react';
 import { useState } from 'react';
 
 const Profile = () => {
-  const { authUser } = useAuthStore();
-  const { isUpdatingProfile, updateProfile } = useUserStore();
+  const { authUser } = useAuth();
+  const { isUpdatingProfile, updateProfile } = useUser();
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
@@ -36,18 +36,36 @@ const Profile = () => {
           {/*Avatar upload*/}
           <div className="flex flex-col items-center gap-4">
             <div className="relative w-36 h-36">
-              <img src={selectedImage || authUser?.profilePic || '/avatar.svg'} alt="User" className="rounded-full object-cover" />
+              <img
+                src={selectedImage || authUser?.profilePic || '/avatar.svg'}
+                alt="User"
+                className="rounded-full object-cover"
+              />
               <label
                 htmlFor="avatar-upload"
                 className={` absolute inset-0 flex items-center justify-center bg-base-content/15 hover:bg-base-content/30
                 p-2 rounded-full cursor-pointer transition-all duration-250 ${isUpdatingProfile ? 'animate-pulse pointer-events-none' : ''}`}
               >
-                {isUpdatingProfile ? <Loader2 className="size-8 animate-spin" /> : <Camera className="size-8 text-white" />}
+                {isUpdatingProfile ? (
+                  <Loader2 className="size-8 animate-spin" />
+                ) : (
+                  <Camera className="size-8 text-white" />
+                )}
 
-                <input type="file" id="avatar-upload" className="hidden" onChange={handleImageUpload} disabled={isUpdatingProfile} />
+                <input
+                  type="file"
+                  id="avatar-upload"
+                  className="hidden"
+                  onChange={handleImageUpload}
+                  disabled={isUpdatingProfile}
+                />
               </label>
             </div>
-            <p className="text-sm text-zinc-400">{isUpdatingProfile ? 'Uploading...' : 'Upload your profile picture'}</p>
+            <p className="text-sm text-zinc-400">
+              {isUpdatingProfile
+                ? 'Uploading...'
+                : 'Upload your profile picture'}
+            </p>
           </div>
 
           <div className="space-y-6">
@@ -56,7 +74,9 @@ const Profile = () => {
                 <User className="w-4 h-4" />
                 Name
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.name}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+                {authUser?.name}
+              </p>
             </div>
 
             <div className="space-y-1.5">
@@ -64,7 +84,9 @@ const Profile = () => {
                 <Mail className="w-4 h-4" />
                 Email
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
+                {authUser?.email}
+              </p>
             </div>
           </div>
 
@@ -73,7 +95,14 @@ const Profile = () => {
             <div className="space-y-3 text-sm">
               <div className="flex items-center justify-between py-1">
                 <span>Member Since</span>
-                <span>{authUser?.createdAt ? new Date(authUser.createdAt).toISOString().split('T')[0].replace(/-/g, ' ') : 'N/A'}</span>
+                <span>
+                  {authUser?.createdAt
+                    ? new Date(authUser.createdAt)
+                        .toISOString()
+                        .split('T')[0]
+                        .replace(/-/g, ' ')
+                    : 'N/A'}
+                </span>
               </div>
 
               <hr className="border-base-content/20" />

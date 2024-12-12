@@ -8,12 +8,12 @@ import Login from './pages/Login.tsx';
 import Settings from './pages/Settings.tsx';
 import Profile from './pages/Profile.tsx';
 import Navbar from './components/Navbar.tsx';
-import { useAuthStore } from './store/useAuth.store.ts';
+import { useAuth } from './store/useAuth.store.ts';
 import SignupVerify from './pages/SignupVerify.tsx';
 import { useTheme } from './store/useTheme.store.ts';
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, checkAuth, isCheckingAuth } = useAuth();
 
   const { theme } = useTheme();
 

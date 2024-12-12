@@ -3,13 +3,13 @@ import { useChat } from '../store/useChat.store.ts';
 
 import SidebarSkeleton from './skeletons/SidebarSkeleton.tsx';
 import { Users } from 'lucide-react';
-import { useAuthStore } from '../store/useAuth.store.ts';
+import { useAuth } from '../store/useAuth.store.ts';
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChat();
 
-  const { onlineUsers } = useAuthStore();
+  const { onlineUsers } = useAuth();
   const onlineUserIds = onlineUsers.map((user) => user.id).filter((id) => id);
 
   useEffect(() => {
