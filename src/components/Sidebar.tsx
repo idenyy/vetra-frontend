@@ -6,15 +6,23 @@ import { Users } from 'lucide-react';
 import { useAuth } from '../store/useAuth.store.ts';
 
 const Sidebar = () => {
-  const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } =
+  const { getUsers, getLastMessage, lastMessages, users, selectedUser, setSelectedUser, isUsersLoading } =
     useChat();
 
   const { onlineUsers } = useAuth();
-  const onlineUserIds = onlineUsers.map((user) => user.id).filter((id) => id);
+  const onlineUserIds = onlineUsers.map((user) => user._id).filter((_id) => _id);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
+
+  useEffect(() => {
+    if (users) {
+      users.forEach((user) => {
+        getLastMessage(user._id as string);
+      });
+    }
+  }, [users, getLastMessage, lastMessages]);
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -30,33 +38,35 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {users.map((user) => (
-          <button
-            key={user?.id}
-            onClick={() => setSelectedUser(user)}
-            className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?.id === user.id ? 'bg-base-300 ring-1 ring-base-300' : ''}`}
-          >
-            <div className="relative mx-auto lg:mx-0">
-              <img
-                src={user.profilePic || '/avatar.svg'}
-                alt={user.name}
-                className="size-12 object-cover rounded-full"
-              />
-              {user.id && onlineUserIds.includes(user.id) && (
-                <span className="absolute bottom-0 right-0 bg-success/50 ring-2 ring-zinc-900 rounded-full size-3" />
-              )}
-            </div>
-
-            <div className="hidden lg:block text-left min-w-0">
-              <div className="font-medium truncate">{user.name}</div>
-              <div className="text-sm text-zinc-400">
-                {user.id && onlineUserIds.includes(user.id)
-                  ? 'Online'
-                  : 'Offline'}
+        {users &&
+          users?.map((user) => (
+            <button
+              key={user?._id}
+              onClick={() => setSelectedUser(user)}
+              className={`w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors ${selectedUser?._id === user?._id ? 'bg-base-300 ring-1 ring-base-300' : ''}`}
+            >
+              <div className="relative mx-auto lg:mx-0">
+                <img
+                  src={user.profilePic || '/avatar.svg'}
+                  alt={user.name}
+                  className="size-12 object-cover rounded-full"
+                />
+                {user._id && onlineUserIds.includes(user._id) && (
+                  <span className="absolute bottom-0 right-0 bg-success/50 ring-2 ring-zinc-900 rounded-full size-3" />
+                )}
               </div>
-            </div>
-          </button>
-        ))}
+
+              <div className="hidden lg:block text-left min-w-0">
+                <div className="font-medium truncate">{user.name}</div>
+                <div className="text-sm text-zinc-400">
+                  {lastMessages && user._id && lastMessages[user._id] ? lastMessages[user._id] : ''}
+                </div>
+                <div className="text-sm text-zinc-400">
+                  {user._id && onlineUserIds.includes(user._id) ? 'Online' : 'Offline'}
+                </div>
+              </div>
+            </button>
+          ))}
       </div>
     </aside>
   );

@@ -1,4 +1,5 @@
 import { User } from './user.type.ts';
+import { Message } from './message.type.ts';
 
 export interface AuthState {
   authUser: User | null;
@@ -10,11 +11,7 @@ export interface AuthState {
 
   checkAuth: () => Promise<User | null>;
 
-  signup: (data: {
-    name: string;
-    email: string;
-    password: string;
-  }) => Promise<User | void>;
+  signup: (data: { name: string; email: string; password: string }) => Promise<User | void>;
 
   verifySignup: (verificationCode: string) => Promise<void>;
 
@@ -42,7 +39,7 @@ export interface ThemeState {
 }
 
 export interface ChatState {
-  messages: [];
+  messages: Message[];
   users: User[];
   selectedUser: User | null;
   setSelectedUser: (user: User | null) => Promise<void>;
@@ -50,5 +47,8 @@ export interface ChatState {
   isMessagesLoading: boolean;
 
   getUsers: () => Promise<void>;
-  getMessages: (id: string) => Promise<void>;
+  getMessages: (_id: string) => Promise<void>;
+  getLastMessage: (_id: string) => Promise<void>;
+  lastMessages: Record<string, string> | null;
+  sendMessage: (message: Message) => Promise<void>;
 }
