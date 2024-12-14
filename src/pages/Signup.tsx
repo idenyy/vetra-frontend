@@ -21,7 +21,6 @@ const Signup = () => {
     email: '',
     password: ''
   });
-  const [step, setStep] = useState('signup'); // "signup" or "confirm"
   const [verificationCode, setVerificationCode] = useState<string[]>(['', '', '', '', '', '']);
   const inputRefs = useRef<Array<HTMLInputElement | null>>([]);
 
@@ -46,12 +45,7 @@ const Signup = () => {
 
     if (!validateSignup()) return;
 
-    try {
-      const response = await signup(formData);
-      if (response) setStep('confirm');
-    } catch (error: any) {
-      console.error(error);
-    }
+    await signup(formData);
   };
 
   const handleVerificationChange = (index: number, value: string) => {
@@ -90,7 +84,7 @@ const Signup = () => {
     <div className="min-h-screen grid lg:grid-cols-2">
       <div className="flex flex-col justify-center items-center p-6 sm:p-12">
         <div className="w-full max-w-md space-y-8">
-          {step === 'signup' ? (
+          {!isVerifyingSignup ? (
             <>
               <div className="text-center mb-8">
                 <div className="flex flex-col items-center gap-2 group">
