@@ -36,6 +36,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     try {
       const response = await axios.post('/auth/signup', data);
       toast.success(response.data.message || 'Verification code sent');
+      set({ isVerifyingSignup: true });
     } catch (error: any) {
       toast.error(error.response.data.error || 'Signup failed. Please try again.');
       throw error;
