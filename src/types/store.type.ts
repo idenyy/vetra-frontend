@@ -6,6 +6,7 @@ export interface AuthState {
   authUser: User | null;
   isSigningUp: boolean;
   isVerifyingSignup: boolean;
+  isVerifyingCode: boolean;
   isLoggingIn: boolean;
   isCheckingAuth: boolean;
   onlineUsers: string[];
