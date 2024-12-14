@@ -10,6 +10,7 @@ export const useAuth = create<AuthState>((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isVerifyingSignup: false,
+  isVerifyingCode: false,
   isLoggingIn: false,
 
   isCheckingAuth: true,
@@ -36,7 +37,7 @@ export const useAuth = create<AuthState>((set, get) => ({
     try {
       const response = await axios.post('/auth/signup', data);
       toast.success(response.data.message || 'Verification code sent');
-      set({ isVerifyingSignup: true });
+      set({ isVerifyingCode: true });
     } catch (error: any) {
       toast.error(error.response.data.error || 'Signup failed. Please try again.');
       throw error;
@@ -65,6 +66,7 @@ export const useAuth = create<AuthState>((set, get) => ({
       throw error;
     } finally {
       set({ isVerifyingSignup: false });
+      set({ isVerifyingCode: false });
     }
   },
 
