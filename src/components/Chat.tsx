@@ -91,11 +91,6 @@ const Chat = () => {
                         {message.createdAt ? formatDate(new Date(message.createdAt)) : ''}
                       </time>
                     </div>
-                    <div className="flex self-end">
-                      {message.senderId === authUser?._id && (
-                        <div className="flex ml-2">{message.isRead ? '✓✓' : '✓'}</div>
-                      )}
-                    </div>
                   </div>
                 </div>
               </div>
