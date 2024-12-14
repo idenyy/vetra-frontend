@@ -241,9 +241,9 @@ const Signup = () => {
               <div className="text-center mt-4">
                 <p className="text-base-content/60">
                   Didn't receive a code?{' '}
-                  <Link to="/resend-code" className="link link-primary">
+                  <p className="link link-primary">
                     Resend Code
-                  </Link>
+                  </p>
                 </p>
               </div>
             </>
