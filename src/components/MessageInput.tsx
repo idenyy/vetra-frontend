@@ -41,7 +41,6 @@ const MessageInput = () => {
         image: imagePreview || ''
       };
 
-      console.log(content);
       await sendMessage({
         content: content
       });

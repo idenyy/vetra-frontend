@@ -16,13 +16,10 @@ const Login = () => {
 
   const validate = () => {
     if (!formData.email.trim()) return toast.error('Email is required');
-    if (
-      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(formData.email)
-    )
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/i.test(formData.email))
       return toast.error('Invalid email address');
     if (!formData.password) return toast.error('Password is required');
-    if (formData.password.length < 6)
-      return toast.error('Password must be at least 6 characters');
+    if (formData.password.length < 6) return toast.error('Password must be at least 6 characters');
     return true;
   };
 
@@ -34,7 +31,6 @@ const Login = () => {
 
     try {
       const response = await login(formData);
-      console.log(response);
       if (response) navigate('/');
     } catch (error: any) {
       console.error(error);
@@ -71,9 +67,7 @@ const Login = () => {
                   className="input input-bordered w-full pl-10"
                   placeholder="Email"
                   value={formData.email}
-                  onChange={(e) =>
-                    setFormData({ ...formData, email: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
               </div>
             </div>
@@ -91,9 +85,7 @@ const Login = () => {
                   className="input input-bordered w-full pl-10"
                   placeholder="••••••••"
                   value={formData.password}
-                  onChange={(e) =>
-                    setFormData({ ...formData, password: e.target.value })
-                  }
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 />
                 <button
                   type="button"
@@ -109,11 +101,7 @@ const Login = () => {
               </div>
             </div>
 
-            <button
-              type="submit"
-              className="btn btn-primary w-full"
-              disabled={isLoggingIn}
-            >
+            <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
               {isLoggingIn ? (
                 <>
                   <Loader2 className="size-5 animate-spin" />

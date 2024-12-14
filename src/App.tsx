@@ -14,7 +14,6 @@ import { useTheme } from './store/useTheme.store.ts';
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth } = useAuth();
-
   const { theme } = useTheme();
 
   useEffect(() => {
@@ -42,30 +41,12 @@ const App = () => {
       <Navbar />
 
       <Routes>
-        <Route
-          path="/"
-          element={authUser ? <Home /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/signup"
-          element={!authUser ? <Signup /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/signup/verify"
-          element={!authUser ? <SignupVerify /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/login"
-          element={!authUser ? <Login /> : <Navigate to="/" />}
-        />
-        <Route
-          path="/settings"
-          element={authUser ? <Settings /> : <Navigate to="/login" />}
-        />
-        <Route
-          path="/profile"
-          element={authUser ? <Profile /> : <Navigate to="/login" />}
-        />
+        <Route path="/" element={authUser ? <Home /> : <Navigate to="/login" />} />
+        <Route path="/signup" element={!authUser ? <Signup /> : <Navigate to="/" />} />
+        <Route path="/signup/verify" element={!authUser ? <SignupVerify /> : <Navigate to="/" />} />
+        <Route path="/login" element={!authUser ? <Login /> : <Navigate to="/" />} />
+        <Route path="/settings" element={authUser ? <Settings /> : <Navigate to="/login" />} />
+        <Route path="/profile" element={authUser ? <Profile /> : <Navigate to="/login" />} />
       </Routes>
 
       <Toaster />

@@ -2,8 +2,11 @@ import { create } from 'zustand';
 import { axios } from '../config/axios.ts';
 import toast from 'react-hot-toast';
 import { AuthState } from '../types/store.type.ts';
+import { io } from 'socket.io-client';
 
-export const useAuth = create<AuthState>((set) => ({
+const BASE_URL: string = 'https://vetra-4a1b4efd0f63.herokuapp.com/';
+
+export const useAuth = create<AuthState>((set, get) => ({
   authUser: null,
   isSigningUp: false,
   isVerifyingSignup: false,
@@ -12,10 +15,13 @@ export const useAuth = create<AuthState>((set) => ({
   isCheckingAuth: true,
   onlineUsers: [],
 
+  socket: null,
+
   checkAuth: async () => {
     try {
       const response = await axios.get('/auth/check');
       set({ authUser: response.data });
+      get().connectSocket();
       return response.data;
     } catch {
       set({ authUser: null });
@@ -32,9 +38,7 @@ export const useAuth = create<AuthState>((set) => ({
       toast.success(response.data.message || 'Verification code sent');
       return response.data;
     } catch (error: any) {
-      toast.error(
-        error.response.data.error || 'Signup failed. Please try again.'
-      );
+      toast.error(error.response.data.error || 'Signup failed. Please try again.');
       throw error;
     } finally {
       set({ isSigningUp: false });
@@ -48,12 +52,12 @@ export const useAuth = create<AuthState>((set) => ({
       const response = await axios.post('/auth/signup/verify', {
         verification_code: verificationCode
       });
-      toast.success(response.data.message || 'Signup verified successfully');
       set({ authUser: response.data.user });
+      toast.success(response.data.message || 'Signup verified successfully');
+
+      get().connectSocket();
     } catch (error: any) {
-      toast.error(
-        error.response.data.error || 'Verification failed. Please try again.'
-      );
+      toast.error(error.response.data.error || 'Verification failed. Please try again.');
       throw error;
     } finally {
       set({ isVerifyingSignup: false });
@@ -67,10 +71,10 @@ export const useAuth = create<AuthState>((set) => ({
       const response = await axios.post('/auth/login', data);
       set({ authUser: response.data });
       toast.success(response.data.message || 'Logged in successfully');
+
+      get().connectSocket();
     } catch (error: any) {
-      toast.error(
-        error.response.data.error || 'Login failed. Please try again.'
-      );
+      toast.error(error.response.data.error || 'Login failed. Please try again.');
       throw error;
     } finally {
       set({ isLoggingIn: false });
@@ -82,10 +86,30 @@ export const useAuth = create<AuthState>((set) => ({
       await axios.delete('/auth/logout');
       set({ authUser: null });
       toast.success('Logged out successfully');
+      get().disconnectSocket();
     } catch (error: any) {
-      toast.error(
-        error.response.data.error || 'Logout failed. Please try again.'
-      );
+      toast.error(error.response.data.error || 'Logout failed. Please try again.');
     }
+  },
+
+  connectSocket: async () => {
+    const { authUser } = get();
+    if (!authUser || get().socket?.connected) return;
+
+    const socket = io(BASE_URL, {
+      query: {
+        userId: authUser._id
+      }
+    });
+    socket.connect();
+
+    set({ socket: socket });
+
+    socket.on('getOnlineUsers', (userIds: string[]) => {
+      set({ onlineUsers: userIds });
+    });
+  },
+  disconnectSocket: async () => {
+    if (get().socket?.connected) get().socket?.disconnect();
   }
 }));

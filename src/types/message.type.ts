@@ -3,7 +3,7 @@ export type Message = {
   senderId?: string;
   receiverId?: string;
   content?: Record<string, any>;
-  isRead?: string;
+  isRead?: boolean;
   createdAt?: Date;
   updatedAt?: Date;
 };

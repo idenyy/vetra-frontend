@@ -39,7 +39,7 @@ const Profile = () => {
               <img
                 src={selectedImage || authUser?.profilePic || '/avatar.svg'}
                 alt="User"
-                className="rounded-full object-cover"
+                className="w-full h-full rounded-full object-cover"
               />
               <label
                 htmlFor="avatar-upload"
@@ -62,9 +62,7 @@ const Profile = () => {
               </label>
             </div>
             <p className="text-sm text-zinc-400">
-              {isUpdatingProfile
-                ? 'Uploading...'
-                : 'Upload your profile picture'}
+              {isUpdatingProfile ? 'Uploading...' : 'Upload your profile picture'}
             </p>
           </div>
 
@@ -74,9 +72,7 @@ const Profile = () => {
                 <User className="w-4 h-4" />
                 Name
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                {authUser?.name}
-              </p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.name}</p>
             </div>
 
             <div className="space-y-1.5">
@@ -84,9 +80,7 @@ const Profile = () => {
                 <Mail className="w-4 h-4" />
                 Email
               </div>
-              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">
-                {authUser?.email}
-              </p>
+              <p className="px-4 py-2.5 bg-base-200 rounded-lg border">{authUser?.email}</p>
             </div>
           </div>
 
@@ -97,10 +91,7 @@ const Profile = () => {
                 <span>Member Since</span>
                 <span>
                   {authUser?.createdAt
-                    ? new Date(authUser.createdAt)
-                        .toISOString()
-                        .split('T')[0]
-                        .replace(/-/g, ' ')
+                    ? new Date(authUser.createdAt).toISOString().split('T')[0].replace(/-/g, ' ')
                     : 'N/A'}
                 </span>
               </div>

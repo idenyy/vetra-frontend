@@ -4,6 +4,7 @@ import { axios } from '../config/axios.ts';
 import { ChatState } from '../types/store.type.ts';
 import { User } from '../types/user.type.ts';
 import { Message } from '../types/message.type.ts';
+import { useAuth } from './useAuth.store.ts';
 
 export const useChat = create<ChatState>((set, get) => ({
   messages: [] as Message[],
@@ -31,6 +32,8 @@ export const useChat = create<ChatState>((set, get) => ({
     try {
       const response = await axios.get(`/chat/${_id}`);
       set({ messages: response.data });
+
+      await get().markMessagesAsRead(_id);
     } catch (error: any) {
       toast.error(error.response.data.error || 'Something went wrong. Please try again.');
     } finally {
@@ -65,6 +68,54 @@ export const useChat = create<ChatState>((set, get) => ({
       toast.error(error.response.data.message || 'Something went wrong. Please try again.');
       console.log(error);
     }
+  },
+
+  markMessagesAsRead: async (chatId: string) => {
+    try {
+      const socket = useAuth.getState().socket;
+      const { messages } = get();
+
+      const unreadMessages = messages.filter((msg) => !msg.isRead);
+
+      if (unreadMessages.length > 0) {
+        socket.emit('readMessage', {
+          chatId,
+          messageIds: unreadMessages.map((msg) => msg._id)
+        });
+
+        set({
+          messages: messages.map((msg) => (unreadMessages.includes(msg) ? { ...msg, isRead: true } : msg))
+        });
+      }
+    } catch (error: any) {
+      console.error('Failed to mark messages as read:', error);
+    }
+  },
+
+  subscribeToMessages: async () => {
+    const { selectedUser } = get();
+    if (!selectedUser) return;
+
+    const socket = useAuth.getState().socket;
+
+    socket.on('newMessage', async (message: Message) => {
+      if (message.senderId !== selectedUser._id) return;
+      set({ messages: [...get().messages, message] });
+    });
+
+    socket.on('messageRead', (messageId: string) => {
+      set((state) => ({
+        messages: state.messages.map((message) =>
+          message._id === messageId ? { ...message, isRead: true } : message
+        )
+      }));
+    });
+  },
+
+  unsubscribeToMessages: async () => {
+    const socket = useAuth.getState().socket;
+    socket.off('newMessage');
+    socket.off('messageRead');
   },
 
   setSelectedUser: async (user: User | null) => {
