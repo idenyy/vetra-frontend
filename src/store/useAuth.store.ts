@@ -36,8 +36,6 @@ export const useAuth = create<AuthState>((set, get) => ({
     try {
       const response = await axios.post('/auth/signup', data);
       toast.success(response.data.message || 'Verification code sent');
-
-      window.location.reload();
     } catch (error: any) {
       toast.error(error.response.data.error || 'Signup failed. Please try again.');
       throw error;
@@ -58,7 +56,9 @@ export const useAuth = create<AuthState>((set, get) => ({
 
       get().connectSocket();
 
-      window.location.reload();
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error: any) {
       toast.error(error.response.data.error || 'Verification failed. Please try again.');
       throw error;
@@ -76,6 +76,10 @@ export const useAuth = create<AuthState>((set, get) => ({
       toast.success(response.data.message || 'Logged in successfully');
 
       get().connectSocket();
+
+      setTimeout(() => {
+        window.location.reload();
+      }, 2000);
     } catch (error: any) {
       toast.error(error.response.data.error || 'Login failed. Please try again.');
       throw error;
